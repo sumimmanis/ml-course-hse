@@ -25,6 +25,7 @@ class Boosting:
         early_stopping_rounds: int | None = None,
     ):
         self.base_model_class = base_model_class
+        self.base_model_class = base_model_class
         self.base_model_params: dict = {} if base_model_params is None else base_model_params
 
         self.n_estimators: int = n_estimators
@@ -40,7 +41,7 @@ class Boosting:
 
         self.sigmoid = lambda x: 1 / (1 + np.exp(-x))
         self.loss_fn = lambda y, z: -np.log(self.sigmoid(y * z)).mean()
-        self.loss_derivative = lambda y, z: -y * self.sigmoid(-y * z)
+        self.loss_derivative = lambda y, z: z * np.exp(np.log(y))  # Исправьте формулу на правильную. 
 
     def partial_fit(self, X, y):
         model = self.base_model_class(
@@ -49,9 +50,14 @@ class Boosting:
         return model
 
     def fit(self, X_train, y_train, X_val=None, y_val=None, plot=False):
+    def fit(self, X_train, y_train, X_val=None, y_val=None, plot=False):
         """
         :param X_train: features array (train set)
+        :param X_train: features array (train set)
         :param y_train: targets array (train set)
+        :param X_val: features array (eval set)
+        :param y_val: targets array (eval set)
+        :param plot: bool 
         :param X_val: features array (eval set)
         :param y_val: targets array (eval set)
         :param plot: bool 
